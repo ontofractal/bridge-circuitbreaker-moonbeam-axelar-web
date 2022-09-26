@@ -1,0 +1,68 @@
+<%= if not Enum.empty?(@chains) && not is_nil(@eth) do %>
+  <h1>USD.bridged supply via external bridge</h1>
+  <table class="table">
+    <%= for chain <- @chains do %>
+      <tr>
+        <td>
+          <%= chain.name %>
+        </td>
+        <td>
+          <div>
+            <%= round(chain.underlying_total_supply) %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <h1>USD.bridged$meta_wrapped</h1>
+  <table class="table">
+    <th>Chain</th>
+    <th>USD.Bridged$wrapped</th>
+    <th>USD.Bridged in crosschain contract</th>
+    <th>Status</th>
+    <%= for chain <- @chains do %>
+      <tr>
+        <td>
+          <%= chain.name %>
+        </td>
+        <td>
+          <div>
+            <%= round(chain.crosschain_total_supply) %>
+          </div>
+        </td>
+
+        <td>
+          <div>
+            <%= round(chain.underlying_balance_of_contract) %>
+          </div>
+        </td>
+        <td>
+          <div>
+            <%= if chain.bridge_asset_discrepancy do %>
+              <div>PROTECTION ACTIVATED</div>
+            <% else %>
+              <div>OK</div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <h1>Native USD asset on Ethereum</h1>
+
+  <div>
+    Asset Supply on native chain <%= round(@eth.underlying_total_supply) %>
+  </div>
+
+  <div>
+    Asset supply on bridged chains tracked via accounting using Axelar GMP <%= round(
+      @eth.total_bridged_balance_via_accounting
+    ) %>
+  </div>
+<% else %>
+  <div>
+    Loading...
+  </div>
+<% end %>
